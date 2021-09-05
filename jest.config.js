@@ -14,7 +14,7 @@ module.exports = {
   // cacheDirectory: "C:\\Users\\Tania\\AppData\\Local\\Temp\\jest",
 
   // Automatically clear mock calls and instances between every test
-  clearMocks: true,
+  //clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
   // collectCoverage: false,
@@ -191,4 +191,7 @@ module.exports = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+  //setupFilesAfterEnv: ["./src/localStorageMock.js"],
+  //"resetMocks": false,
+  //"setupFiles": ["jest-localstorage-mock"]
 };

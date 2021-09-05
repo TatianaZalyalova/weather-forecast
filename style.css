@@ -1,3 +1,7 @@
 img {
     display: block;
 }
+
+.list ol li:first-child {
+    color: red;
+}
