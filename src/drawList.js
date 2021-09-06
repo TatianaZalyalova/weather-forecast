@@ -23,7 +23,7 @@ export async function formSubmit(form, input, list, el) {
         if(items.indexOf(cityName) === -1) {
           items.push(cityName); 
         }
-        if (items.length > 5) {
+        if (items.length > 10) {
           items.shift();
         }
         saveCities(items);
