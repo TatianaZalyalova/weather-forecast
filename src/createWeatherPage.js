@@ -1,4 +1,4 @@
-import { createAddForm, createAddList } from "./drawList";
+import { createAddForm, createAddList } from "./drawList.js";
 
 export const APP_ID = 'f91294195b850a1f739d40dd214b1feb';
 export async function getLocationUser() {
