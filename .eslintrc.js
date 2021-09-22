@@ -16,10 +16,13 @@ module.exports = {
       {
         ignoreComments: true,
         ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreUrls: true
       },
     ],
     "import/prefer-default-export": "off",
     "no-param-reassign": [2, { props: false }],
     "no-useless-escape": "off",
-  },
+    "import/no-cycle": [0]
+}
 };

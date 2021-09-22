@@ -5,6 +5,7 @@ const path = require('path');
 
 module.exports = {
   entry: './src/index.js',
+  mode: 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'index_bundle.js',
@@ -16,7 +17,8 @@ module.exports = {
   plugins: [new HtmlWebpackPlugin({
       template: './index.html'
   })],
-  module: {
+  plugins: [new HtmlWebpackPlugin(), new MiniCssExtractPlugin()],
+  module: { 
     rules: [
       {
         test: /\.m?js$/,
@@ -33,5 +35,12 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       }
     ]
-  }
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+    compress: true,
+    port: 9000,
+  },
 };
