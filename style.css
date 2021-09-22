@@ -1,0 +1,13 @@
+img {
+    display: block;
+}
+
+.error {
+    color: red;
+    padding: 20px 0;
+    display: none;
+}
+
+.error.active {
+    display: block;
+}
