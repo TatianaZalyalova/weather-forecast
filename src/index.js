@@ -1,4 +1,4 @@
-import {createWeatherPage } from "./createWeatherPage.js";
+import {createWeatherPage } from "./createWeatherPage";
 
 createWeatherPage(document.querySelector("#app"));
 

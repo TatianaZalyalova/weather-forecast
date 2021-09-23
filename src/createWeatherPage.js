@@ -1,18 +1,28 @@
-import { createAddForm, createAddList } from "./drawList.js";
+import { createAddForm, createAddList } from "./drawList";
 
 export const APP_ID = 'f91294195b850a1f739d40dd214b1feb';
 export async function getLocationUser() {
-  const url = 'https://get.geojs.io/v1/ip/geo.json';
-  const response = await fetch(url);
-  const  objLocationUser = await response.json();
-  return objLocationUser.city;
+  try {
+    const url = 'https://get.geojs.io/v1/ip/geo.json';
+    const response = await fetch(url);
+    const  objLocationUser = await response.json();
+    return objLocationUser.city;
+  } catch(e) {
+    console.log(e);
+    return 0;
+  }
 }
 
 export async function getWeather(city) {
-  const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${APP_ID}`;
-  const response = await fetch(url);
-  const  objWeather = await response.json();
-  return objWeather;
+  try {
+    const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${APP_ID}`;
+    const response = await fetch(url);
+    const  objWeather = await response.json();
+    return objWeather;
+  } catch(e) {
+    console.log(e);
+    return 0;
+  }
 }
 
 function getWetherIconSrc(weather) {
