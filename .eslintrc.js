@@ -23,6 +23,8 @@ module.exports = {
     "import/prefer-default-export": "off",
     "no-param-reassign": [2, { props: false }],
     "no-useless-escape": "off",
-    "import/no-cycle": [0]
+    "import/no-cycle": [0],
+    "import/no-unresolved": "off",
+    "import/extensions": "off"
 }
 };
