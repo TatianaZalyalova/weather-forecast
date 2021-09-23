@@ -1,4 +1,4 @@
-import { getWeather, showWeather} from "./createWeatherPage.js";
+import { getWeather, showWeather} from "./createWeatherPage";
 
 export const key = "key";
 function readCities() {
