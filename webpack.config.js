@@ -1,44 +1,47 @@
-const { template } = require('@babel/core');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { template } = require("@babel/core");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: './src/index.js',
-  mode: 'development',
-  devtool: 'eval-source-map',
+  entry: "./src/index.js",
+  mode: "development",
+  devtool: "eval-source-map",
   output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: 'index_bundle.js',
+    path: path.resolve(__dirname, "./dist"),
+    filename: "index_bundle.js",
     clean: true,
-    environment : {
-        arrowFunction: false
-    }
+    environment: {
+      arrowFunction: false,
+    },
   },
-  plugins: [new HtmlWebpackPlugin({
-      template: './index.html'
-  }), new MiniCssExtractPlugin()],
-  module: { 
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./index.html",
+    }),
+    new MiniCssExtractPlugin(),
+  ],
+  module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env']
-          }
-        }
+            presets: ["@babel/preset-env"],
+          },
+        },
       },
       {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
-      }
-    ]
+      },
+    ],
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, 'public'),
+      directory: path.join(__dirname, "public"),
     },
     compress: true,
     port: 9000,
