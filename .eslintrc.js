@@ -28,5 +28,6 @@ module.exports = {
     "import/extensions": "off",
     "consistent-return": "off",
     "no-else-return": "off",
+    "spaced-comment": "off"
   },
 };
