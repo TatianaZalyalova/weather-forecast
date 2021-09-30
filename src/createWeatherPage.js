@@ -1,28 +1,36 @@
 import { createAddForm, createAddList } from "./drawList";
 
-export const APP_ID = 'f91294195b850a1f739d40dd214b1feb';
+export const APP_ID = "f91294195b850a1f739d40dd214b1feb";
+
 export async function getLocationUser() {
+  const url = "https://get.geojs.io/v1/ip/geo.json";
+  let objLocationUser;
   try {
-    const url = 'https://get.geojs.io/v1/ip/geo.json';
     const response = await fetch(url);
-    const  objLocationUser = await response.json();
-    return objLocationUser.city;
-  } catch(e) {
+    if (response.ok) {
+      objLocationUser = await response.json();
+      return objLocationUser.city;
+    } else {
+      document.querySelector(".location-error").classList.add("active");
+    }
+  } catch (e) {
     console.log(e);
-    return 0;
   }
 }
 
 export async function getWeather(city) {
+  const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${APP_ID}`;
+  let objWeather;
   try {
-    const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${APP_ID}`;
     const response = await fetch(url);
-    const  objWeather = await response.json();
-    return objWeather;
-  } catch(e) {
+    objWeather = await response.json();
+    if (!response.ok) {
+      document.querySelector(".location-error").classList.add("active");
+    }
+  } catch (e) {
     console.log(e);
-    return 0;
   }
+  return objWeather;
 }
 
 function getWetherIconSrc(weather) {
@@ -34,35 +42,33 @@ function getMapImageSrc(weather) {
 }
 
 export async function createWeatherPage(el) {
+  createAddForm(el);
   const city = await getLocationUser();
   const weather = await getWeather(city);
-  const h2 = document.createElement("h2");
-  const p = document.createElement("p");
-  const icon = document.createElement("img");
-  const mapImg = document.createElement("img");
+  if (weather) {
+    const h2 = document.createElement("h2");
+    const p = document.createElement("p");
+    const icon = document.createElement("img");
+    const mapImg = document.createElement("img");
 
-  createAddForm(el);
-  
-  h2.innerHTML = weather.name;
-  p.innerHTML = `${Math.round(weather.main.temp)} °`;
-  icon.classList.add("icon");
-  icon.src = getWetherIconSrc(weather);
-  mapImg.classList.add("map");
-  mapImg.src = getMapImageSrc(weather);
-  
-  el.appendChild(h2);
-  el.appendChild(p);
-  el.appendChild(icon);
-  el.appendChild(mapImg);
+    h2.innerHTML = weather.name;
+    p.innerHTML = `${Math.round(weather.main.temp)} °`;
+    icon.classList.add("icon");
+    icon.src = getWetherIconSrc(weather);
+    mapImg.classList.add("map");
+    mapImg.src = getMapImageSrc(weather);
 
-  createAddList(el);
+    el.appendChild(h2);
+    el.appendChild(p);
+    el.appendChild(icon);
+    el.appendChild(mapImg);
   }
-
-export function showWeather(el, weather) {
-
-  el.querySelector('h2').innerHTML = weather.name;
-  el.querySelector('p').innerHTML = `${Math.round(weather.main.temp)} °`;
-  el.querySelector('img.icon').src = getWetherIconSrc(weather);
-  el.querySelector('img.map').src = getMapImageSrc(weather);   
+  createAddList(el);
 }
 
+export function showWeather(el, weather) {
+  el.querySelector("h2").innerHTML = weather.name;
+  el.querySelector("p").innerHTML = `${Math.round(weather.main.temp)} °`;
+  el.querySelector("img.icon").src = getWetherIconSrc(weather);
+  el.querySelector("img.map").src = getMapImageSrc(weather);
+}

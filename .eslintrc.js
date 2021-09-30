@@ -17,7 +17,7 @@ module.exports = {
         ignoreComments: true,
         ignoreRegExpLiterals: true,
         ignoreStrings: true,
-        ignoreUrls: true
+        ignoreUrls: true,
       },
     ],
     "import/prefer-default-export": "off",
@@ -25,6 +25,8 @@ module.exports = {
     "no-useless-escape": "off",
     "import/no-cycle": [0],
     "import/no-unresolved": "off",
-    "import/extensions": "off"
-}
+    "import/extensions": "off",
+    "consistent-return": "off",
+    "no-else-return": "off",
+  },
 };

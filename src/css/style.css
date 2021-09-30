@@ -1,13 +1,17 @@
 img {
-    display: block;
+  display: block;
 }
 
-.error {
-    color: red;
-    padding: 20px 0;
-    display: none;
+.location-error {
+  color: red;
+  padding: 20px 0;
+  display: none;
 }
 
-.error.active {
-    display: block;
+.location-error.active {
+  display: block;
+}
+
+form input {
+  margin-right: 10px;
 }
