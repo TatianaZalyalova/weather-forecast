@@ -1,4 +1,4 @@
-name: base-syntax
+name: weather-forecast
 on: pull_request
 jobs:
   lint:
