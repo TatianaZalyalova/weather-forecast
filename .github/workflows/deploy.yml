@@ -9,9 +9,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Packages
-        run: npm install
+        run: |
+          npm install
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
         # https://github.com/marketplace/actions/deploy-to-github-pages
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.0.0
