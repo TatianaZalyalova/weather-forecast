@@ -8,7 +8,8 @@
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint . --fix && prettier --write .",
     "prepare": "husky install",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack",
+    "dev": "webpack --node-env development"
   },
   "repository": {
     "type": "git",

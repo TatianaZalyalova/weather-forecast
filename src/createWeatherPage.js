@@ -67,6 +67,7 @@ export async function createWeatherPage(el) {
 }
 
 export function showWeather(el, weather) {
+  document.querySelector(".location-error").classList.remove("active");
   el.querySelector("h2").innerHTML = weather.name;
   el.querySelector("p").innerHTML = `${Math.round(weather.main.temp)} °`;
   el.querySelector("img.icon").src = getWetherIconSrc(weather);

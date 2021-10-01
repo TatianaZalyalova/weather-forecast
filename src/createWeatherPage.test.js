@@ -1,4 +1,5 @@
 import { createWeatherPage } from "./createWeatherPage";
+import { sleep } from "./utils";
 
 describe("createWeatherPage", () => {
   it("is a function", () => {
@@ -24,11 +25,6 @@ describe("functional tests", () => {
     })
   );
 
-  const sleep = (ms) =>
-    new Promise((resolve) => {
-      setTimeout(() => resolve(), ms);
-    });
-
   const el = document.createElement("div");
   const locationError = document.createElement("div");
   locationError.classList.add("location-error");
@@ -41,7 +37,7 @@ describe("functional tests", () => {
     expect(formEl).toBeTruthy();
     expect(formEl.querySelector("input#userInput")).toBeTruthy();
     expect(formEl.querySelector("button")).toBeTruthy();
-    sleep(3000).then(() =>
+    sleep(500).then(() =>
       expect(el.querySelector("h2").innerHTML).toBe("Kyiv")
     );
     expect(el.querySelector("p").innerHTML).toBe("16 °");

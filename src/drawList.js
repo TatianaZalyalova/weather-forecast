@@ -1,6 +1,6 @@
 import { getWeather, showWeather } from "./createWeatherPage";
 
-export const key = "key";
+const key = "key";
 function readCities() {
   const result = localStorage.getItem(key);
   if (result === null) {
@@ -16,8 +16,10 @@ export function drawList(listEl, elems) {
 }
 
 export function saveCities(elems, cityName) {
-  if (elems.indexOf(cityName) === -1) {
-    elems.push(cityName);
+  let newCityName = cityName.trim();
+  newCityName = cityName[0].toUpperCase() + cityName.toLowerCase().slice(1);
+  if (elems.indexOf(newCityName) === -1) {
+    elems.push(newCityName);
   }
 
   if (elems.length > 10) {
@@ -35,7 +37,6 @@ export async function formSubmit(form, input, el) {
     input.value = "";
     const weather = await getWeather(cityName);
     if (weather.cod !== "404") {
-      document.querySelector(".location-error").classList.remove("active");
       showWeather(el, weather);
       saveCities(items, cityName);
       drawList(list, items);
@@ -62,6 +63,13 @@ export function createAddForm(el) {
 
 export function createAddList(el) {
   const listEl = document.createElement("div");
+  listEl.addEventListener("click", async function (event) {
+    const target = event.target;
+    if (target.tagName !== "LI") return;
+    const city = target.innerHTML;
+    const weather = await getWeather(city);
+    showWeather(el, weather);
+  });
   listEl.classList.add("list");
   el.appendChild(listEl);
   drawList(listEl, items);

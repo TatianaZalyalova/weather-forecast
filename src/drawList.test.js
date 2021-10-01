@@ -1,5 +1,6 @@
 import { createWeatherPage, getLocationUser } from "./createWeatherPage";
 import { saveCities } from "./drawList";
+import { sleep } from "./utils";
 
 describe("show a list of entered cities", () => {
   global.fetch = jest.fn(() =>
@@ -17,11 +18,6 @@ describe("show a list of entered cities", () => {
         }),
     })
   );
-
-  const sleep = (ms) =>
-    new Promise((resolve) => {
-      setTimeout(() => resolve(), ms);
-    });
 
   const elWeather = document.createElement("div");
   const locationError = document.createElement("p");
@@ -80,7 +76,7 @@ describe("show a list of entered cities", () => {
       })
     );
     getLocationUser();
-    sleep(3000).then(() =>
+    sleep(500).then(() =>
       expect(document.querySelector(".location-error").className).resolves.toBe(
         "location-error active"
       )

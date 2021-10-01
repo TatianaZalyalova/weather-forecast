@@ -30,5 +30,7 @@ module.exports = {
     "no-else-return": "off",
     "spaced-comment": "off",
     "no-unused-vars": "off",
+    "prefer-arrow-callback": "off",
+    "prefer-destructuring": "off",
   },
 };

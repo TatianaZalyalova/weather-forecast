@@ -15,3 +15,7 @@ img {
 form input {
   margin-right: 10px;
 }
+
+.list li {
+  cursor: pointer;
+}
