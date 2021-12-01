@@ -40,5 +40,8 @@ module.exports = {
     "no-plusplus": "off",
     "no-new": "off",
     "no-use-before-define": "off",
+    "no-explicit-any": "off",
+    "no-prototype-builtins": "off",
+    "class-methods-use-this": "off",
   },
 };
