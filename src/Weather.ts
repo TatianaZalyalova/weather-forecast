@@ -23,8 +23,7 @@ export class Weather extends Component {
     listEl.addEventListener("click", async (ev) => {
       const target = ev.target as HTMLElement;
       if (target.tagName !== "LI") return;
-      const city = target.innerHTML;
-      this.state.CITY = city;
+      this.state.CITY = target.innerHTML;
       this.elem.innerHTML = await this.renderWeather();
       this.setupEvents();
     });
@@ -49,8 +48,7 @@ export class Weather extends Component {
       async clickOncity(ev) {
         const target = ev.target as HTMLElement;
         if (target.tagName !== "LI") return;
-        const city = target.innerHTML;
-        this.state.CITY = city;
+        this.state.CITY = target.innerHTML;
         this.elem.innerHTML = await this.renderWeather();
         this.setupEvents();
       }
