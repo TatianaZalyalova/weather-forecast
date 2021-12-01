@@ -1,4 +1,9 @@
-import { createWeatherPage } from "./createWeatherPage";
+import { Weather } from "./Weather";
 import "./css/style.css";
 
-createWeatherPage(document.querySelector("#app"));
+const myObj = new Weather(document.getElementById("app") as HTMLElement);
+myObj.init(async function () {
+  await myObj.getLocationUser();
+  myObj.elem.innerHTML = await myObj.renderWeather();
+  myObj.setupEvents();
+});
