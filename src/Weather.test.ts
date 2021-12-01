@@ -46,7 +46,7 @@ describe("Weather", () => {
   it("setupEvents formSubmit", async () => {
     document.querySelector("input").value = "Kyiv";
     document.querySelector("form").submit();
-    sleep(3000).then(() =>
+    sleep(500).then(() =>
       expect(document.querySelector(".list ol li").innerHTML).resolves.toBe(
         "Kyiv"
       )
@@ -56,7 +56,7 @@ describe("Weather", () => {
   it("setupEvents clickOncity", async () => {
     document.querySelector("input").value = "Kyiv";
     document.querySelector(".list li").click();
-    sleep(3000).then(() =>
+    sleep(500).then(() =>
       expect(document.querySelector("h2").innerHTML).resolves.toBe("Adana")
     );
   });
