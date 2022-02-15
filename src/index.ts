@@ -1,9 +1,11 @@
 import { Weather } from "./Weather";
+import { Cities } from "./Cities";
 import "./css/style.css";
 
-const myObj = new Weather(document.getElementById("app") as HTMLElement);
-myObj.init(async function () {
-  await myObj.getLocationUser();
-  myObj.elem.innerHTML = await myObj.renderWeather();
-  myObj.setupEvents();
-});
+const cities = new Cities(
+  document.getElementById("cities-list") as HTMLElement
+);
+const weather = new Weather(
+  document.getElementById("app") as HTMLElement,
+  cities
+);
