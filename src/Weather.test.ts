@@ -1,19 +1,25 @@
 import { Weather } from "./Weather";
+import { Cities } from "./Cities";
 import { sleep } from "./utils";
 
 describe("Weather", () => {
-  const el: HTMLDivElement = document.createElement("div");
-  document.body.innerHTML = `<form>
+  const weatherEl: HTMLDivElement = document.createElement("div");
+  weatherEl.innerHTML = `<form>
     <input id="userInput" placeholder="Введите название города">
     <button>Узнать погоду</button>
-  </form>`;
-  document.body.appendChild(el);
-  global.fetch = jest.fn(() =>
+  </form>
+  <p class="location-error">
+    Не удалось определить местоположение, введите название города в форму.
+  </p>
+  <div id="weather">
+  <div id="cities-list"></div>`;
+  document.body.appendChild(weatherEl);
+  (global.fetch as any) = jest.fn(() =>
     Promise.resolve({
       ok: true,
       json: () =>
         Promise.resolve({
-          city: "Kyiv",
+          name: "Kyiv",
           coord: { lon: 30.5167, lat: 50.4333 },
           weather: [{ icon: "01d" }],
           main: {
@@ -36,45 +42,102 @@ describe("Weather", () => {
     })
   );
 
-  const myObj = new Weather(el);
-  myObj.init(async function () {
-    await myObj.getLocationUser();
-    myObj.elem.innerHTML = await myObj.renderWeather();
-    myObj.setupEvents();
-  });
+  const cities = new Cities(
+    document.getElementById("cities-list") as HTMLElement
+  );
 
-  it("setupEvents formSubmit", async () => {
-    document.querySelector("input").value = "Kyiv";
-    document.querySelector("form").submit();
-    sleep(500).then(() =>
-      expect(document.querySelector(".list ol li").innerHTML).resolves.toBe(
-        "Kyiv"
-      )
-    );
-  });
+  const weather = new Weather(
+    document.getElementById("weather") as HTMLElement,
+    cities
+  );
 
-  it("setupEvents clickOncity", async () => {
-    document.querySelector("input").value = "Kyiv";
-    document.querySelector(".list li").click();
+  it("renderWeather", async () => {
     sleep(500).then(() =>
-      expect(document.querySelector("h2").innerHTML).resolves.toBe("Adana")
+      expect(weatherEl.querySelector("h2").innerHTML).toBe("Kyiv")
     );
+    sleep(500).then(() =>
+      expect(weatherEl.querySelector(".temp").innerHTML).toBe("16 °")
+    );
+    sleep(500).then(() => {
+      const icon = weatherEl.querySelector("img.icon") as HTMLImageElement;
+      expect(icon.src).toBe("http://openweathermap.org/img/wn/01d@2x.png");
+    });
+
+    await sleep(500).then(() => {
+      const map = weatherEl.querySelector("img.map") as HTMLImageElement;
+      expect(map.src).toBe(
+        "https://static-maps.yandex.ru/1.x/" +
+          `?ll=30.5167,50.4333&size=450,450&z=13&l=map`
+      );
+    });
   });
 
   it("could not determine location", async () => {
-    global.fetch = jest.fn(() =>
+    (global.fetch as any) = jest.fn(() =>
       Promise.resolve({
         ok: false,
         json: () => Promise.resolve({}),
       })
     );
-    await myObj.getLocationUser();
-    myObj.elem.innerHTML = await myObj.renderWeather();
-    myObj.setupEvents();
-    sleep(500).then(() =>
-      expect(document.querySelector(".location-error").className).resolves.toBe(
+    const locationUser = await weather.getLocationUser();
+    weather.renderWeather(locationUser);
+    sleep(500).then(() => expect(locationUser).toBe(false));
+    await sleep(500).then(() =>
+      expect(document.querySelector(".location-error").className).toBe(
         "location-error active"
       )
     );
+  });
+
+  it("enter the city in the form", async () => {
+    (global.fetch as any) = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            name: "Paris",
+            coord: { lon: 36.5167, lat: 55.4333 },
+            weather: [{ icon: "01d" }],
+            main: {
+              temp: 16.41,
+            },
+            ok: true,
+            status: 200,
+            cities: [
+              "Adana",
+              "Baghdad",
+              "Delhi",
+              "Copenhagen",
+              "Milan",
+              "Donetsk",
+              "Paris",
+              "Helsinki",
+              "Hiroshima",
+            ],
+          }),
+      })
+    );
+
+    const form = document.querySelector("form");
+    form.querySelector("input").value = "Paris";
+    form.submit();
+    await sleep(500).then(() =>
+      expect(weatherEl.querySelector("h2").innerHTML).toBe("Paris")
+    );
+    sleep(500).then(() =>
+      expect(weatherEl.querySelector(".temp").innerHTML).toBe("16 °")
+    );
+    sleep(500).then(() => {
+      const icon = weatherEl.querySelector("img.icon") as HTMLImageElement;
+      expect(icon.src).toBe("http://openweathermap.org/img/wn/01d@2x.png");
+    });
+
+    sleep(500).then(() => {
+      const map = weatherEl.querySelector("img.map") as HTMLImageElement;
+      expect(map.src).toBe(
+        "https://static-maps.yandex.ru/1.x/" +
+          `?ll=35.5167,55.4333&size=450,450&z=13&l=map`
+      );
+    });
   });
 });
