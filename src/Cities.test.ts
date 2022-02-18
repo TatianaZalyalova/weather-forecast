@@ -5,54 +5,61 @@ import { sleep } from "./utils";
 
 describe("show a list of entered cities", () => {
   const el: HTMLDivElement = document.createElement("div");
-  document.body.innerHTML = `<form>
+  el.innerHTML = `<form>
   <input id="userInput" placeholder="Введите название города">
   <button>Узнать погоду</button>
 </form>
 <p class="location-error">Не удалось определить местоположение, введите название города в форму.</p>
-      <div id="app"></div>
+      <div id="weather"></div>
       <div id="cities-list"></div>`;
   document.body.appendChild(el);
-  (global.fetch as any) = jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          city: "Kyiv",
-          coord: { lon: 30.5167, lat: 50.4333 },
-          weather: [{ icon: "01d" }],
-          main: {
-            temp: 16.41,
-          },
-          name: "Kyiv",
-        }),
-    })
+  global.fetch = jest.fn(
+    () =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            city: "Kyiv",
+            coord: { lon: 30.5167, lat: 50.4333 },
+            weather: [{ icon: "01d" }],
+            main: {
+              temp: 16.41,
+            },
+            name: "Kyiv",
+          }),
+      }) as Promise<Response>
   );
 
-  const cities = new Cities(el as HTMLElement);
+  const cities = new Cities(
+    document.getElementById("cities-list") as HTMLElement
+  );
 
-  const weather = new Weather(el as HTMLElement, cities);
+  const weather = new Weather(
+    document.getElementById("weather") as HTMLElement,
+    cities
+  );
 
   it("adding a city to the list", async () => {
-    document.querySelector("input").value = "Kyiv";
-    const form = document.querySelector("form");
+    el.querySelector("input").value = "Kyiv";
+    const form = el.querySelector("form");
     form.submit();
-    sleep(3000).then(() =>
-      expect(el.querySelector(".list ol li").innerHTML).resolves.toBe("Kyiv")
+    await sleep(3000).then(() =>
+      expect(el.querySelector(".list ol li").innerHTML).toBe("Kyiv")
     );
   });
 
   it("entering an invalid value", async () => {
-    document.querySelector("input").value = "iii";
-    (global.fetch as any) = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve({ cod: "404" }),
-      })
+    el.querySelector("input").value = "iii";
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          json: () => Promise.resolve({ cod: "404" }),
+        }) as Promise<Response>
     );
-    document.querySelector("form").submit();
-    sleep(3000).then(() =>
-      expect(document.querySelector(".error").className).resolves.toBe(
-        "error active"
+    el.querySelector("form").submit();
+    await sleep(3000).then(() =>
+      expect(el.querySelector(".location-error").className).toBe(
+        "location-error active"
       )
     );
   });
@@ -75,7 +82,7 @@ describe("show a list of entered cities", () => {
     expect(newArrCity.indexOf("Delhi")).toBe(newArrCity.lastIndexOf("Delhi"));
   });
 
-  it("no more than 10 cities in the list", () => {
+  it("no more than 10 cities in the list", async () => {
     const arrCity = [
       "Adana",
       "Baghdad",
@@ -90,11 +97,11 @@ describe("show a list of entered cities", () => {
     ];
     localStorage.setItem(cities.key, JSON.stringify(arrCity));
 
-    cities.saveCities("Seoul");
-    const newArrCity = JSON.parse(localStorage.getItem(cities.key));
+    await cities.saveCities("Seoul");
+    const newArrCity = await JSON.parse(localStorage.getItem(cities.key));
 
-    sleep(500).then(() => newArrCity.length.toBe(10));
-    sleep(500).then(() => expect(newArrCity[0]).toBe("Baghdad"));
-    sleep(500).then(() => expect(newArrCity[9]).toBe("Seoul"));
+    await sleep(500).then(() => expect(newArrCity.length).toBe(10));
+    await sleep(500).then(() => expect(newArrCity[0]).toBe("Baghdad"));
+    await sleep(500).then(() => expect(newArrCity[9]).toBe("Seoul"));
   });
 });

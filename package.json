@@ -9,7 +9,7 @@
     "lint:fix": "eslint . --fix && prettier --write . --ext .js,.ts",
     "prepare": "husky install",
     "build": "webpack",
-    "dev": "webpack --node-env development"
+    "dev": "webpack serve --node-env development"
   },
   "repository": {
     "type": "git",

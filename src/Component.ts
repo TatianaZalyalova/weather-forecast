@@ -12,12 +12,12 @@ export interface IComponent {
 }
 
 interface State {
-  CITY?: string;
-  ICON?: string;
-  LAT?: number;
-  LON?: number;
-  TEMP?: string;
-  cities?: { CITY: string }[];
+  city?: string;
+  icon?: string;
+  lat?: number;
+  lon?: number;
+  temp?: string;
+  cities?: { city: string }[] | [];
 }
 
 interface IEvents {
@@ -37,7 +37,7 @@ export abstract class Component implements IComponent {
     this.elem = elem;
   }
 
-  setupEvents = (events: IEvents) => {
+  setupEvents = (events: IEvents): void => {
     Object.entries(events).forEach(([key, value]) => {
       const arr = key.split("@");
       const event = arr[0];
@@ -47,7 +47,7 @@ export abstract class Component implements IComponent {
     });
   };
 
-  setState = (obj: Partial<State>) => {
+  setState = (obj: Partial<State>): void => {
     this.state = {
       ...this.state,
       ...obj,
@@ -55,9 +55,9 @@ export abstract class Component implements IComponent {
     this.elem.innerHTML = this.render(this.tpl, this.state);
     this.setupEvents(this.events);
   };
-  init = (callback: { (): Promise<void>; bind?: any }) => {
+  init = (callback: { (): Promise<void>; bind?: any }): void => {
     callback.bind(this)();
   };
 
-  render = (tpl: string, data: State) => template(tpl, data);
+  render = (tpl: string, data: State): string => template(tpl, data);
 }

@@ -2,31 +2,33 @@ import { Cities } from "./Cities";
 import { Component } from "./Component";
 
 interface IdataWeather {
-  [key: string]: string;
+  [key: string]: any;
 }
 interface IWeather {
-  formSubmit: (ev: Event) => void;
-  getLocationUser: () => Promise<string> | Promise<false>;
-  getWeatherData: (city: string) => Promise<IdataWeather>;
+  formSubmit: (ev: Event) => Promise<void>;
+  getLocationUser: () => Promise<string | undefined>;
+  getWeatherData: (city: string) => Promise<IdataWeather | undefined>;
   renderWeather: (city: string) => Promise<void>;
 }
 
 export class Weather extends Component implements IWeather {
   cities: Cities;
-  tpl = `<h2>{{CITY}}</h2>
-  <p class="temp">{{TEMP}}</p>
-  <img class="icon" src="http://openweathermap.org/img/wn/{{ICON}}@2x.png">
-  <img class="map" src="https://static-maps.yandex.ru/1.x/?ll={{LON}},{{LAT}}&amp;size=450,450&amp;z=13&amp;l=map">`;
+  tpl = `<h2>{{city}}</h2>
+  <p class="temp">{{temp}}</p>
+  <img class="icon" src="http://openweathermap.org/img/wn/{{icon}}@2x.png">
+  <img class="map" src="https://static-maps.yandex.ru/1.x/?ll={{lon}},{{lat}}&amp;size=450,450&amp;z=13&amp;l=map">`;
 
   constructor(elem: HTMLElement, cities: Cities) {
     super(elem);
     this.init(async () => {
       const city = await this.getLocationUser();
-      await this.renderWeather(city);
+      if (city) {
+        await this.renderWeather(city);
+      }
     });
 
     this.cities = cities;
-    this.cities.init(async function () {
+    this.cities.init(async () => {
       cities.renderList();
     });
     this.cities.setOnCityClickListener((city: string) => {
@@ -34,7 +36,7 @@ export class Weather extends Component implements IWeather {
     });
   }
 
-  formSubmit = async (ev: Event) => {
+  formSubmit = async (ev: Event): Promise<void> => {
     ev.preventDefault();
     const formElement = ev.target as HTMLFormElement;
 
@@ -53,7 +55,7 @@ export class Weather extends Component implements IWeather {
     "submit@form": this.formSubmit,
   };
 
-  getLocationUser = async () => {
+  getLocationUser = async (): Promise<string | undefined> => {
     const url = "https://get.geojs.io/v1/ip/geo.json";
     let objLocationUser;
     try {
@@ -63,14 +65,14 @@ export class Weather extends Component implements IWeather {
 
         return objLocationUser.city;
       } else {
-        return false;
+        throw new Error("Местоположение не определено");
       }
     } catch (e) {
-      console.log(e);
+      console.log((e as Error).message);
     }
   };
 
-  getWeatherData = async (city: string) => {
+  getWeatherData = async (city: string): Promise<IdataWeather | undefined> => {
     const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${this.APP_ID}`;
     let objWeather;
     try {
@@ -79,23 +81,23 @@ export class Weather extends Component implements IWeather {
         objWeather = await response.json();
         return objWeather;
       } else {
-        return false;
+        throw new Error("Город не найден");
       }
     } catch (e) {
-      console.log(e);
+      console.log((e as Error).message);
     }
   };
 
-  renderWeather = async (city: string) => {
+  renderWeather = async (city: string): Promise<void> => {
     const objWeather = await this.getWeatherData(city);
     if (objWeather) {
       document.querySelector(".location-error")?.classList.remove("active");
       this.setState({
-        CITY: objWeather.name,
-        TEMP: `${Math.round(objWeather.main.temp)} °`,
-        ICON: objWeather.weather[0].icon,
-        LON: objWeather.coord.lon,
-        LAT: objWeather.coord.lat,
+        city: objWeather.name,
+        temp: `${Math.round(objWeather.main.temp)} °`,
+        icon: objWeather.weather[0].icon,
+        lon: objWeather.coord.lon,
+        lat: objWeather.coord.lat,
       });
     } else {
       document.querySelector(".location-error")?.classList.add("active");
