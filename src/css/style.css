@@ -1,0 +1,21 @@
+img {
+  display: block;
+}
+
+.location-error {
+  color: red;
+  padding: 20px 0;
+  display: none;
+}
+
+.location-error.active {
+  display: block;
+}
+
+form input {
+  margin-right: 10px;
+}
+
+.list li {
+  cursor: pointer;
+}
