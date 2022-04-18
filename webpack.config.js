@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./src/index.ts",
   mode: process.env.NODE_ENV === "development" ? "development" : "production",
   devtool: "eval-source-map",
   output: {
@@ -24,7 +24,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js$|ts/,
         exclude: /(node_modules)/,
         use: {
           loader: "babel-loader",
@@ -37,6 +37,16 @@ module.exports = {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
+      {
+        test: /\.js$|ts/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
     ],
   },
   devServer: {
@@ -45,5 +55,8 @@ module.exports = {
     },
     compress: true,
     port: 9000,
+  },
+  resolve: {
+    extensions: [".js", ".ts"],
   },
 };

@@ -4,12 +4,13 @@ module.exports = {
     es2021: true,
     "jest/globals": true,
   },
-  extends: ["airbnb-base", "prettier"],
+  extends: ["airbnb-base", "plugin:@typescript-eslint/recommended", "prettier"],
   parserOptions: {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["jest"],
+  plugins: ["jest", "@typescript-eslint"],
+  parser: "@typescript-eslint/parser",
   rules: {
     "max-len": [
       "error",
@@ -18,6 +19,7 @@ module.exports = {
         ignoreRegExpLiterals: true,
         ignoreStrings: true,
         ignoreUrls: true,
+        code: 100,
       },
     ],
     "import/prefer-default-export": "off",
@@ -32,5 +34,14 @@ module.exports = {
     "no-unused-vars": "off",
     "prefer-arrow-callback": "off",
     "prefer-destructuring": "off",
+    "lines-between-class-members": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "no-continue": "off",
+    "no-plusplus": "off",
+    "no-new": "off",
+    "no-use-before-define": "off",
+    "no-explicit-any": "off",
+    "no-prototype-builtins": "off",
+    "class-methods-use-this": "off",
   },
 };
